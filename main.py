@@ -20,7 +20,7 @@ tests = corona_virus[2]
 deaths = corona_virus[3]
 
 if deaths == 0:
-    deaths_annouchment = "Σήμερα δεν υπήρχαν θάνατοι."
+    deaths_annouchment = "Σήμερα δεν υπήρξαν θάνατοι."
 else:
     deaths_annouchment = "Σημερινοί θανάτοι: " + str(deaths)
 
