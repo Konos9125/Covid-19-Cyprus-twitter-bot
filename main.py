@@ -19,10 +19,10 @@ new = corona_virus[1]
 tests = corona_virus[2]
 deaths = corona_virus[3]
 
-if deaths == 0:
+if deaths == "0":
     deaths_annouchment = "Σήμερα δεν υπήρξαν θάνατοι."
 else:
-    deaths_annouchment = "Σημερινοί θανάτοι: " + str(deaths)
+    deaths_annouchment = "Σημερινοί θανάτοι: " + deaths
 
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
