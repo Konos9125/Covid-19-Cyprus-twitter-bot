@@ -30,5 +30,5 @@ def covid_stats():
     s_deaths = [index for index, item in enumerate(stats_parent) if item == "s"][2]
     deaths = "".join(stats_parent[s_deaths + 1 : T_deaths])
 
-    return total, new, tests, deaths
 
+    return total, new, tests, deaths

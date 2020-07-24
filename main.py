@@ -35,14 +35,20 @@ driver.set_window_position(-10000,0)
 
 api = tw.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
 
+wait = True
 
 while True:
     
+    
+    if wait:
+        print("Waiting..")
+        wait = False
+        
     time_ = time.ctime()
 
     if "19:00:00" in time_:
 
-        print ("Please wait....")
+        print ("Running....")
 
         driver.get('https://covid19.ucy.ac.cy')
         time.sleep(30)
@@ -62,4 +68,6 @@ while True:
 
         file = open("status.txt", "r")
         api.update_status(status = file.read(), media_ids= [photo.media_id])
-        print("Done")
+        
+        wait = True
+        print("Done!")
