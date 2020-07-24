@@ -31,4 +31,4 @@ def covid_stats():
     deaths = "".join(stats_parent[s_deaths + 1 : T_deaths])
 
     return total, new, tests, deaths
-print (covid_stats())
+
