@@ -12,18 +12,25 @@ secret_access_token = "dmkBry6Crs3Fm1o9IYhpaJRNIvnIhgcFnPnihSHfNwgMl"
 auth = tw.OAuthHandler(api_key, api_secret_key)
 auth.set_access_token(access_token, secret_access_token)
 
-
+#assign stats to vars
 corona_virus = covid.covid_stats()
 total = corona_virus[0]
 new = corona_virus[1]
 tests = corona_virus[2]
 deaths = corona_virus[3]
 
+#change the announcement
 if deaths == "0":
-    deaths_annouchment = "Σήμερα δεν υπήρξαν θάνατοι."
+    deaths_announcement = "Δεν υπήρξαν θάνατοι απο τον κορωνοϊό."
 else:
-    deaths_annouchment = "Σημερινοί θανάτοι: " + deaths
+    deaths_announcement = "Σημερινοί θανάτοι: " + deaths
+    
+if tests == "0":
+    tests_announcement = "."
+else:
+    tests_announcement = "απο " + tests + " εξετάσεις κορωνοϊού."
 
+#set the chrome driver
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
@@ -38,36 +45,37 @@ api = tw.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
 wait = True
 
 while True:
-    
-    
+
+    #loop until its 19:00
     if wait:
         print("Waiting..")
         wait = False
-        
+
     time_ = time.ctime()
 
     if "19:00:00" in time_:
 
         print ("Running....")
-
-        driver.get('https://covid19.ucy.ac.cy')
+        
+        #take a screenshot of the webpage with the covid graph and upload it on twitter
+        driver.get('http://fullimg.atwebpages.com')
         time.sleep(30)
         driver.get_screenshot_as_file("screenshot.png")
         driver.quit()
         photo = api.media_upload("screenshot.png")
 
-
+        #save twitter status in txt file (in order to use line breaks)
         file = open("status.txt", "w", encoding= "utf-8")
-        file.write(("Σήμερα βρέθηκαν " + str(new) + " κρούσματα απο  " + str(tests) + " εξετάσεις κορωνοϊού."
-                    + "\n\n\n" + deaths_annouchment
+        file.write(("Σήμερα βρέθηκαν " + new + " κρούσματα" + tests_announcement
+                    + "\n\n\n" + deaths_announcement
                     + "\nΣύνολο: "+ str(total) + " κρούσματα."
-                    + "\n\nSources:\nhttps://corona.help\nhttps://covid19.ucy.ac.cy"
+                    + "\n\nSources:\nhttps://corona.help\nhttps://en.wikipedia.org/wiki/COVID-19_pandemic_in_Cyprus"
                     + "\n\n\n\u0023covid19 \u0023covidcyprus \u0023menoumespiti"))
         file.close()
 
-
+        #read the file and update status
         file = open("status.txt", "r")
         api.update_status(status = file.read(), media_ids= [photo.media_id])
-        
+
         wait = True
         print("Done!")
