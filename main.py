@@ -59,7 +59,7 @@ while True:
         
         #take a screenshot of the webpage with the covid graph and upload it on twitter
         driver.get('http://fullimg.atwebpages.com')
-        time.sleep(30)
+        time.sleep(5)
         driver.get_screenshot_as_file("screenshot.png")
         driver.quit()
         photo = api.media_upload("screenshot.png")
