@@ -13,7 +13,7 @@ first_run = True
 
 while True:
 
-    #loop until its 20:30
+    #loop until its 23:00
     if first_run:
         print("Waiting..")
         yesterdays_total = "".join([x for x in list(covid.get_covid_cases("total")) if x != ","])
