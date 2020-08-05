@@ -13,13 +13,14 @@ first_run = True
 
 while True:
 
+    time_ = time.ctime()
+
     #loop until its 23:00
-    if first_run:
+    if "17:00:00" in time_ or "17:00:02" in time_ or  "17:00:03" in time_:
         print("Waiting..")
         yesterdays_total = "".join([x for x in list(covid.get_covid_cases("total")) if x != ","])
         first_run = False
 
-    time_ = time.ctime()
 
     if "23:00:00" in time_ or "23:00:02" in time_ or  "23:00:03" in time_:
 
