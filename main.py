@@ -1,6 +1,7 @@
 import tweepy as tw
 import cyprus_covid19 as covid
 import time
+from datetime import datetime
 from selenium import webdriver
 import os
 
@@ -20,9 +21,8 @@ while True:
     time_ = time.ctime()
 
     #loop until its 23:00
-    if "17:00:00" in time_ or "17:00:02" in time_ or  "17:00:03" in time_:
+    if first_run:
         print("Waiting..")
-        yesterdays_total = "".join([x for x in list(covid.get_covid_cases("total")) if x != ","])
         first_run = False
 
 
@@ -31,35 +31,44 @@ while True:
         print ("Running....")
 
         #assign vars
-        todays_total = "".join([x for x in list(covid.get_covid_cases("total")) if x != ","])
-        new = str(int(todays_total) - int(yesterdays_total))
+        todays_total = covid.get_covid_cases("total")
+        new = covid.get_covid_cases("new")
         deaths = covid.get_covid_cases("deaths")
         tests = covid.get_covid_cases("tests")
+        date = datetime.today().strftime("%d/%m/%Y")
 
         #change the announcement
+
+        if new == "0":
+            new_announcement = "\n\nΣήμερα δεν βρέθηκαν κρούσματα κορωνοϊού"
+        else:
+            new_announcement = "\n\nΣήμερα βρέθηκαν " + new + " κρούσματα"
         if deaths == "0":
             deaths_announcement = "Δεν υπήρξαν θάνατοι απο τον κορωνοϊό."
         else:
             deaths_announcement = "Σημερινοί θανάτοι: " + deaths
-
         if tests == "0":
             tests_announcement = "."
-        else:
+        elif tests != "0" and new != "0":
             tests_announcement = " απο " + tests + " εξετάσεις κορωνοϊού."
+        elif tests != "0" and new == "0":
+            tests_announcement = " και έγιναν " + tests + " εξετάσεις."
+
 
         #save twitter status in txt file (in order to use line breaks)
         file = open("status.txt", "w", encoding= "utf-8")
-        file.write(("Σήμερα βρέθηκαν " + new + " κρούσματα" + tests_announcement
-                    + "\n\n\n" + deaths_announcement
-                    + "\nΣύνολο: "+ str(todays_total) + " κρούσματα."
-                    + "\n\nSources:\nhttps://corona.help\nhttps://en.wikipedia.org/wiki/COVID-19_pandemic_in_Cyprus"
-                    + "\nΠροσοχή: Υπάρχει περίπτωση οι πληροφορίες να είναι λανθασμένες."
-                    + "\n\n\n\u0023covid19 \u0023covidcyprus \u0023menoumespiti"))
+        file.write( date
+                    + new_announcement + tests_announcement
+                    + "\n" + deaths_announcement
+                    + "\nΣύνολο: " + todays_total + " κρούσματα."
+                    + "\n\nSources:\nhttps://corona.help"
+                    + "\n\nΠροσοχή: Υπάρχει περίπτωση οι πληροφορίες να είναι λανθασμένες."
+                    + "\n\n\n\u0023covid19cy \u0023covidcyprus \u0023menoumespiti")
 
         file.close()
 
         #read the file and update status
-        file = open("status.txt", "r")
+        file = open("status.txt", "r", encoding= "utf-8")
         api.update_status(status = file.read())
 
         first_run = True
