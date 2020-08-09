@@ -1,73 +1,47 @@
-import tweepy as tw
 import cyprus_covid19 as covid
 import time
 from datetime import datetime
-from selenium import webdriver
-import os
+from tweet import tweet_new_cases
 
-
-auth = tw.OAuthHandler(api_key, api_secret_key)
-auth.set_access_token(access_token, secret_access_token)
-
-api = tw.API(auth, wait_on_rate_limit = True, wait_on_rate_limit_notify = True)
+def tweet_and_print():
+    print ("Running....")
+    tweet_new_cases(date)
+    print("Done!")
 
 first_run = True
 
 while True:
 
-    time_ = time.ctime()
+    while True:
 
-    #loop until its 23:00
-    if first_run:
-        print("Waiting..")
-        first_run = False
+        time_ = time.ctime()
+        if "18:00:00" in time_ or "18:00:02" in time_ or "18:00:03" in time_ :
+            date = datetime.today().strftime("%d/%m/%Y")
+            print("Got the date")
+            break
 
-
-    if "23:00:00" in time_ or "23:00:02" in time_ or  "23:00:03" in time_:
-
-        print ("Running....")
-
-        #assign vars
-        todays_total = covid.get_covid_cases("total")
-        new = covid.get_covid_cases("new")
-        deaths = covid.get_covid_cases("deaths")
-        tests = covid.get_covid_cases("tests")
-        date = datetime.today().strftime("%d/%m/%Y")
-
-        #change the announcement
-
-        if new == "0":
-            new_announcement = "\n\nΣήμερα δεν βρέθηκαν κρούσματα κορωνοϊού"
-        else:
-            new_announcement = "\n\nΣήμερα βρέθηκαν " + new + " κρούσματα"
-        if deaths == "0":
-            deaths_announcement = "Δεν υπήρξαν θάνατοι απο τον κορωνοϊό."
-        else:
-            deaths_announcement = "Σημερινοί θανάτοι: " + deaths
-        if tests == "0":
-            tests_announcement = "."
-        elif tests != "0" and new != "0":
-            tests_announcement = " απο " + tests + " εξετάσεις κορωνοϊού."
-        elif tests != "0" and new == "0":
-            tests_announcement = " και έγιναν " + tests + " εξετάσεις."
+    while True:
+        time_ = time.ctime()
 
 
-        #save twitter status in txt file (in order to use line breaks)
-        file = open("status.txt", "w", encoding= "utf-8")
-        file.write( date
-                    + new_announcement + tests_announcement
-                    + "\n" + deaths_announcement
-                    + "\nΣύνολο: " + todays_total + " κρούσματα."
-                    + "\n\nSources:\nhttps://corona.help"
-                    + "\n\nΠροσοχή: Υπάρχει περίπτωση οι πληροφορίες να είναι λανθασμένες."
-                    + "\n\n\n\u0023covid19cy \u0023covidcyprus \u0023menoumespiti")
+        if first_run:
+            print("Waiting for new cases..")
+            yesterdays_total = covid.get_covid_cases("total")
+            first_run = False
 
-        file.close()
+        current_total = covid.get_covid_cases("total")
 
-        #read the file and update status
-        file = open("status.txt", "r", encoding= "utf-8")
-        api.update_status(status = file.read())
+        if current_total != yesterdays_total:
 
-        first_run = True
-        time.sleep(5)
-        print("Done!")
+            tweet_and_print()
+            first_run = True
+            time.sleep(5)
+            break
+
+        elif("06:00:00" in time_ or "06:00:02" in time_ or "06:00:03" in time_
+             and current_total == yesterdays_total) :
+
+            tweet_and_print()
+            first_run = True
+            time.sleep(5)
+            break
