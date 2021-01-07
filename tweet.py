@@ -5,10 +5,10 @@ sys.setdefaultencoding('utf8')
 import cyprus_covid19 as covid
 import tweepy as tw
 
-api_key = "Mz4BfkixaTnYgn2ULmT92ZIo1"
-api_secret_key = "EKanjKerxoaMyFSCKomu7PgtKwwrh8r4w8xvbzYu5qn1Ubvh6l"
-access_token = "1286222502923042818-mlVmmJ6rLhiLSsdeKobbxvDCVEySbs"
-secret_access_token = "dmkBry6Crs3Fm1o9IYhpaJRNIvnIhgcFnPnihSHfNwgMl"
+api_key = "stg"
+api_secret_key = "stg"
+access_token = "stg"
+secret_access_token = "stg"
 auth = tw.OAuthHandler(api_key, api_secret_key)
 auth.set_access_token(access_token, secret_access_token)
 
