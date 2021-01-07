@@ -16,7 +16,7 @@ def get_covid_cases(key):
     def get_all_stats():
         new_parent = list(scrap.find("div", attrs= {"class" : "col-xl-2 col-md-4 col-sm-6"}).text)
 
-        new = "".join([x for x in new_parent if is_int(x)][4:])
+        new = "".join([x for x in new_parent if is_int(x)][5:])
 
         total = scrap.find("h2", attrs = {"class" : "text-bold-700 warning"}).text
 
@@ -44,7 +44,7 @@ def get_covid_cases(key):
     elif key == "new":
 
         new_parent = list(scrap.find("div", attrs= {"class" : "col-xl-2 col-md-4 col-sm-6"}).text)
-        new = "".join([x for x in new_parent if is_int(x)][4:])
+        new = "".join([x for x in new_parent if is_int(x)][5:])
 
         return new
 
